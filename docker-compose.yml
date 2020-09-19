@@ -1,0 +1,55 @@
+version: '3'
+services:
+  m1:
+    container_name: mysql_m1
+    image: mysql:5.7.31
+    volumes:
+      - ./conf/m1:/etc/mysql/mysql.conf.d:ro
+      # 测试而已，不需要把数据目录映射出来
+#        - ./data:/var/lib/mysql
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_HOST: localhost
+      MYSQL_USER: fayfox
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: faycms
+    ports:
+      - "40001:3306"
+  m2:
+    container_name: mysql_m2
+    image: mysql:5.7.31
+    volumes:
+      - ./conf/m2:/etc/mysql/mysql.conf.d:ro
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_HOST: localhost
+      MYSQL_USER: fayfox
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: faycms
+    ports:
+      - "40002:3306"
+  s1:
+    container_name: mysql_s1
+    image: mysql:5.7.31
+    volumes:
+      - ./conf/s1:/etc/mysql/mysql.conf.d:ro
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_HOST: localhost
+      MYSQL_USER: fayfox
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: faycms
+    ports:
+      - "40003:3306"
+  haproxy:
+    container_name: mysql_haproxy
+    image: haproxy
+    volumes:
+      - ./conf/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./etc/localtime:/etc/localtime:ro
+    ports:
+      - "40000:40000"
+      - "41000:41000"
